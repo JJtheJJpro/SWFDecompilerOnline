@@ -1,0 +1,11 @@
+{
+    "dependencies": {
+        "@types/node": "^20.12.4",
+        "typescript": "^5.4.4"
+    },
+    "scripts": {
+        "build": "tsc",
+        "start": "node ./dist/SWF.js",
+        "watch": "tsc --watch"
+    }
+}
