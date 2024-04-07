@@ -1,9 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SWFBitReader = void 0;
+const SWFErrors_1 = require("./SWFErrors");
+const SWFTags_1 = require("./Tags/SWFTags");
 class SWFBitReader {
     boolBuf;
     Position = 0;
+    swffileversion = 0;
+    currenttag = SWFTags_1.SWFTags.Unknown;
+    tempframecount = 0;
     constructor(buf) {
         this.boolBuf = new Array(buf.length * 8);
         for (let i = 0; i < buf.length; i++) {
@@ -18,10 +23,21 @@ class SWFBitReader {
             this.boolBuf[i * 8 + 7] = (element & 1) == 1;
         }
     }
+    Available() {
+        return this.Position < this.boolBuf.length;
+    }
     AlignToNextByte() {
         while (this.Position % 8 != 0) {
             this.Position++;
         }
+    }
+    CheckReservedBlock(bitCount) {
+        let r = this.ReadBits(bitCount);
+        r.forEach(bit => {
+            if (bit) {
+                throw new SWFErrors_1.InvalidSWFError("Reserved block as values set");
+            }
+        });
     }
     ReadBit() {
         return this.boolBuf[this.Position++];
@@ -95,6 +111,11 @@ class SWFBitReader {
         let b1 = this.ReadByte();
         let b2 = this.ReadByte();
         return littleEndian ? b2 << 8 | b1 : b1 << 8 | b2;
+    }
+    PeekUInt16(littleEndian = true) {
+        let ret = this.ReadUInt16();
+        this.Position -= 16;
+        return ret;
     }
     ReadSInt16(littleEndian = true) {
         let uns = this.ReadUInt16(littleEndian);

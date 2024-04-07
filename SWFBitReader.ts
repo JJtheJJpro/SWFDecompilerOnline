@@ -1,6 +1,12 @@
+import { InvalidSWFError } from "./SWFErrors";
+import { SWFTags } from "./Tags/SWFTags";
+
 export class SWFBitReader {
     private boolBuf: boolean[]
     public Position: number = 0
+    public swffileversion = 0
+    public currenttag = SWFTags.Unknown
+    public tempframecount = 0
 
     public constructor(buf: Uint8Array) {
         this.boolBuf = new Array<boolean>(buf.length * 8)
@@ -17,10 +23,23 @@ export class SWFBitReader {
         }
     }
 
+    public Available(): boolean {
+        return this.Position < this.boolBuf.length
+    }
+
     public AlignToNextByte() {
         while (this.Position % 8 != 0) {
             this.Position++
         }
+    }
+
+    public CheckReservedBlock(bitCount: number) {
+        let r = this.ReadBits(bitCount)
+        r.forEach(bit => {
+            if (bit) {
+                throw new InvalidSWFError("Reserved block as values set")
+            }
+        });
     }
 
     public ReadBit(): boolean {
@@ -97,6 +116,11 @@ export class SWFBitReader {
         let b1 = this.ReadByte()
         let b2 = this.ReadByte()
         return littleEndian ? b2 << 8 | b1 : b1 << 8 | b2
+    }
+    public PeekUInt16(littleEndian = true): number {
+        let ret = this.ReadUInt16()
+        this.Position -= 16
+        return ret
     }
 
     public ReadSInt16(littleEndian = true): number {
