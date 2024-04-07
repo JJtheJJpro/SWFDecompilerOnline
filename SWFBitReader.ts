@@ -1,4 +1,4 @@
-class SWFBitReader {
+export class SWFBitReader {
     private boolBuf: boolean[]
     public Position: number = 0
 
@@ -14,6 +14,12 @@ class SWFBitReader {
             this.boolBuf[i * 8 + 5] = (element & 4) >> 2 == 1
             this.boolBuf[i * 8 + 6] = (element & 2) >> 1 == 1
             this.boolBuf[i * 8 + 7] = (element & 1) == 1
+        }
+    }
+
+    public AlignToNextByte() {
+        while (this.Position % 8 != 0) {
+            this.Position++
         }
     }
 
@@ -87,17 +93,28 @@ class SWFBitReader {
         return ret
     }
 
-    public ReadUInt16(littleEndian: boolean): number {
+    public ReadUInt16(littleEndian = true): number {
         let b1 = this.ReadByte()
         let b2 = this.ReadByte()
         return littleEndian ? b2 << 8 | b1 : b1 << 8 | b2
     }
 
-    public ReadSInt16(littleEndian: boolean): number {
-        
+    public ReadSInt16(littleEndian = true): number {
+        let uns = this.ReadUInt16(littleEndian)
+        if (uns >> 15 == 1) {
+            return (-((~uns) & 0b01111111_11111111)) - 1
+        } else {
+            return uns & 0b01111111_11111111
+        }
     }
 
-    public ReadUInt32(littleEndian: boolean): number {
+    public ReadFixedPoint8(): number {
+        let l = this.ReadByte() / 256
+        let h = this.ReadByte()
+        return l + h
+    }
+
+    public ReadUInt32(littleEndian = true): number {
         let b1 = this.ReadByte()
         let b2 = this.ReadByte()
         let b3 = this.ReadByte()
@@ -105,11 +122,42 @@ class SWFBitReader {
         return littleEndian ? b4 << 24 | b3 << 16 | b2 << 8 | b1 : b1 << 24 | b2 << 16 | b3 << 8 | b4
     }
 
-    public ReadSInt32(littleEndian: boolean): number {
-
+    public ReadSInt32(littleEndian = true): number {
+        let uns = this.ReadUInt32(littleEndian)
+        if (uns >> 31 == 1) {
+            return (-((~uns) & 0b01111111_11111111_11111111_11111111)) - 1
+        } else {
+            return uns & 0b01111111_11111111_11111111_11111111
+        }
     }
 
-    public ReadUInt64(littleEndian: boolean): number {
+    public ReadEncodedUInt32(): number {
+        let ret = this.ReadByte()
+        if ((ret & 0x00000080) == 0) {
+            //bytesUsed = 1
+            return ret
+        }
+        ret = (ret & 0x0000007F) | (this.ReadByte() << 7)
+        if ((ret & 0x00004000) == 0) {
+            //bytesUsed = 2
+            return ret
+        }
+        ret = (ret & 0x00003FFF) | (this.ReadByte() << 14)
+        if ((ret & 0x00200000) == 0) {
+            //bytesUsed = 3
+            return ret
+        }
+        ret = (ret & 0x001FFFFF) | (this.ReadByte() << 21)
+        if ((ret & 0x10000000) == 0) {
+            //bytesUsed = 4
+            return ret
+        }
+        ret = (ret & 0x0FFFFFFF) | (this.ReadByte() << 28)
+        //bytesUsed = 5
+        return ret
+    }
+
+    public ReadUInt64(littleEndian = true): number {
         let b1 = this.ReadByte()
         let b2 = this.ReadByte()
         let b3 = this.ReadByte()
@@ -118,23 +166,38 @@ class SWFBitReader {
         let b6 = this.ReadByte()
         let b7 = this.ReadByte()
         let b8 = this.ReadByte()
-        return littleEndian ? b8 << 56 | b7 << 48 | b6 << 40 | b5 << 32 | b4 << 24 | b3 << 16 | b2 << 8 | b1
-                            : b1 << 56 | b2 << 48 | b3 << 40 | b4 << 32 | b5 << 24 | b6 << 16 | b7 << 8 | b8
+        return littleEndian ? b8 << 56 | b7 << 48 | b6 << 40 | b5 << 32 | b4 << 24 | b3 << 16 | b2 << 8 | b1 : b1 << 56 | b2 << 48 | b3 << 40 | b4 << 32 | b5 << 24 | b6 << 16 | b7 << 8 | b8
     }
 
-    public ReadSInt64(littleEndian: boolean): number {
-
+    public ReadSInt64(littleEndian = true): number {
+        let uns = this.ReadUInt64(littleEndian)
+        if (uns >> 63 == 1) {
+            return (-((~uns) & 0b01111111_11111111_11111111_11111111_11111111_11111111_11111111_11111111)) - 1
+        } else {
+            return uns & 0b01111111_11111111_11111111_11111111_11111111_11111111_11111111_11111111
+        }
     }
 
     public ReadNBitUnsignedValue(nbits: number): number {
         let ret = 0
         for (let i = nbits - 1; i >= 0; i--) {
-            ret += this.ReadBit() ? 1 << i : 0
+            ret += this.boolBuf[this.Position++] ? 1 << i : 0
         }
         return ret
     }
     public ReadNBitSignedValue(nbits: number): number {
-        
+        let ret = 0
+        if (this.boolBuf[this.Position]) {
+            for (let i = nbits - 1; i >= 0; i--) {
+                ret |= this.boolBuf[this.Position++] ? 0 : 1 << i
+            }
+            return (-ret) - 1
+        } else {
+            for (let i = nbits - 1; i >= 0; i--) {
+                ret |= this.boolBuf[this.Position++] ? 1 << i : 0
+            }
+            return ret
+        }
     }
 
     public Read8BitString(): string {
@@ -149,6 +212,14 @@ class SWFBitReader {
         return ret
     }
 
+    public Read8BitCharArray(count: number): string {
+        let ret = ""
+        for (let i = 0; i < count; i++) {
+            ret += String.fromCharCode(this.ReadByte())
+        }
+        return ret
+    }
+
     public Read16BitString(littleEndian: boolean): string {
         let ret = ""
         while (true) {
@@ -157,6 +228,14 @@ class SWFBitReader {
                 break
             }
             ret += String.fromCharCode(b)
+        }
+        return ret
+    }
+
+    public Read16BitCharArray(count: number): string {
+        let ret = ""
+        for (let i = 0; i < count; i++) {
+            ret += String.fromCharCode(this.ReadUInt16())
         }
         return ret
     }

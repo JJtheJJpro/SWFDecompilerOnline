@@ -1,11 +1,14 @@
 {
     "dependencies": {
         "@types/node": "^20.12.4",
-        "typescript": "^5.4.4"
+        "start": "^5.1.0"
     },
     "scripts": {
         "build": "tsc",
-        "start": "node ./dist/SWF.js",
+        "start": "node ./dist/index.js",
         "watch": "tsc --watch"
+    },
+    "devDependencies": {
+        "typescript": "^5.4.4"
     }
 }
