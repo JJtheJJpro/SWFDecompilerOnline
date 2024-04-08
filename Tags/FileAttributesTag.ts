@@ -1,8 +1,8 @@
-import { SWFBitReader } from "../SWFBitReader";
-import { SWFTags } from "./SWFTags";
-import { Tag } from "./Tag";
+import ITag from "./ITag";
+import SWFBitReader from "../SWFBitReader";
+import SWFTags from "./SWFTags";
 
-export class FileAttributesTag implements Tag {
+export default class FileAttributesTag implements ITag {
     private _data: Buffer
 
     private constructor(data: Buffer, useDirectBlit: boolean, useGPU: boolean, hasMetaData: boolean, actionScript3: boolean, useNetwork: boolean) {

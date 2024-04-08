@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Rect = void 0;
 class Rect {
     Nbits = 0;
     Xmin = 0;
@@ -17,5 +16,5 @@ class Rect {
         return { Nbits: retNBits, Xmin: retXmin, Xmax: retXmax, Ymin: retYmin, Ymax: retYmax };
     }
 }
-exports.Rect = Rect;
+exports.default = Rect;
 //# sourceMappingURL=Rect.js.map

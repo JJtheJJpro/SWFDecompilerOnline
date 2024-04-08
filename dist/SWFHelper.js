@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SWFHelper = void 0;
 const promises_1 = __importDefault(require("fs/promises"));
-const SWF_1 = require("./SWF");
+const SWF_1 = __importDefault(require("./SWF"));
 //import { Readable } from "stream";
 //import Zlib from "zlib";
 class SWFHelper {
@@ -805,7 +805,7 @@ class SWFHelper {
         if (!this.FileExists(file)) {
             throw new Error("file doesn't exist");
         }
-        return new SWF_1.SWF(await this.DecompressSWF(file));
+        return new SWF_1.default(await this.DecompressSWF(file));
     }
 }
 exports.SWFHelper = SWFHelper;

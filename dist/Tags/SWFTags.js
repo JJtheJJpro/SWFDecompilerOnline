@@ -20,6 +20,9 @@ var SWFTags;
     SWFTags[SWFTags["DefineFontInfo"] = 13] = "DefineFontInfo";
     SWFTags[SWFTags["DefineSound"] = 14] = "DefineSound";
     SWFTags[SWFTags["StartSound"] = 15] = "StartSound";
+    /**
+     * @deprecated StopSoundTag has no structure, and StartSound offers the functionality of stopping sound.  Use SWFTags.StartSound instead.
+     */
     SWFTags[SWFTags["StopSound"] = 16] = "StopSound";
     SWFTags[SWFTags["DefineButtonSound"] = 17] = "DefineButtonSound";
     SWFTags[SWFTags["SoundStreamHead"] = 18] = "SoundStreamHead";
@@ -83,4 +86,5 @@ var SWFTags;
     SWFTags[SWFTags["DefineFontName"] = 88] = "DefineFontName";
     SWFTags[SWFTags["DefineBitsJPEG4"] = 90] = "DefineBitsJPEG4";
 })(SWFTags || (exports.SWFTags = SWFTags = {}));
+exports.default = SWFTags;
 //# sourceMappingURL=SWFTags.js.map

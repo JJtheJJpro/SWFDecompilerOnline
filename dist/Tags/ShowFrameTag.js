@@ -1,15 +1,17 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ShowFrameTag = void 0;
-const SWFErrors_1 = require("../SWFErrors");
-const SWFTags_1 = require("./SWFTags");
+const InvalidSWFError_1 = __importDefault(require("../InvalidSWFError"));
+const SWFTags_1 = __importDefault(require("./SWFTags"));
 class ShowFrameTag {
     constructor(frame) {
         this._frame = frame;
     }
     _frame;
     get TagCode() {
-        return SWFTags_1.SWFTags.ShowFrame;
+        return SWFTags_1.default.ShowFrame;
     }
     get Size() {
         return 0;
@@ -25,9 +27,9 @@ class ShowFrameTag {
             return new ShowFrameTag(br.tempframecount);
         }
         else {
-            throw new SWFErrors_1.InvalidSWFError();
+            throw new InvalidSWFError_1.default();
         }
     }
 }
-exports.ShowFrameTag = ShowFrameTag;
+exports.default = ShowFrameTag;
 //# sourceMappingURL=ShowFrameTag.js.map

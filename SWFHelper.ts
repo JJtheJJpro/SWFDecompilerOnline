@@ -1,5 +1,5 @@
 import fsp from "fs/promises";
-import { SWF } from "./SWF";
+import SWF from "./SWF";
 //import { Readable } from "stream";
 //import Zlib from "zlib";
 

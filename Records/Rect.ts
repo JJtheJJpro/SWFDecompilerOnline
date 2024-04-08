@@ -1,6 +1,6 @@
-import { SWFBitReader } from "../SWFBitReader";
+import SWFBitReader from "../SWFBitReader";
 
-export class Rect {
+export default class Rect {
     public Nbits = 0
     public Xmin = 0
     public Xmax = 0

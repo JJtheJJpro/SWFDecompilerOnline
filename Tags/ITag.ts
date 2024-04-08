@@ -1,6 +1,6 @@
-import { SWFTags } from "./SWFTags";
+import SWFTags from "./SWFTags";
 
-export interface Tag {
+export default interface ITag {
     get TagCode(): SWFTags
     get Size(): number
     get Data(): Buffer

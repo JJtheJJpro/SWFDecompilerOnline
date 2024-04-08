@@ -1,13 +1,15 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SWFBitReader = void 0;
-const SWFErrors_1 = require("./SWFErrors");
-const SWFTags_1 = require("./Tags/SWFTags");
+const InvalidSWFError_1 = __importDefault(require("./InvalidSWFError"));
+const SWFTags_1 = __importDefault(require("./Tags/SWFTags"));
 class SWFBitReader {
     boolBuf;
     Position = 0;
     swffileversion = 0;
-    currenttag = SWFTags_1.SWFTags.Unknown;
+    currenttag = SWFTags_1.default.Unknown;
     tempframecount = 0;
     constructor(buf) {
         this.boolBuf = new Array(buf.length * 8);
@@ -35,7 +37,15 @@ class SWFBitReader {
         let r = this.ReadBits(bitCount);
         r.forEach(bit => {
             if (bit) {
-                throw new SWFErrors_1.InvalidSWFError("Reserved block as values set");
+                throw new InvalidSWFError_1.default("Reserved block as values set");
+            }
+        });
+    }
+    CheckZeroBlock(bitCount) {
+        let r = this.ReadBits(bitCount);
+        r.forEach(bit => {
+            if (bit) {
+                throw new InvalidSWFError_1.default("Reserved block as values set");
             }
         });
     }
@@ -214,6 +224,9 @@ class SWFBitReader {
             return ret;
         }
     }
+    ReadNBitSignedFloatValue(nbits) {
+        return this.ReadNBitSignedValue(nbits) / (1 << 16);
+    }
     Read8BitString() {
         let ret = "";
         while (true) {
@@ -251,5 +264,5 @@ class SWFBitReader {
         return ret;
     }
 }
-exports.SWFBitReader = SWFBitReader;
+exports.default = SWFBitReader;
 //# sourceMappingURL=SWFBitReader.js.map

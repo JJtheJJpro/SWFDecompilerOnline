@@ -1,12 +1,14 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EndTag = void 0;
-const SWFErrors_1 = require("../SWFErrors");
-const SWFTags_1 = require("./SWFTags");
+const InvalidSWFError_1 = __importDefault(require("../InvalidSWFError"));
+const SWFTags_1 = __importDefault(require("./SWFTags"));
 class EndTag {
     constructor() { }
     get TagCode() {
-        return SWFTags_1.SWFTags.End;
+        return SWFTags_1.default.End;
     }
     get Size() {
         return 0;
@@ -19,9 +21,9 @@ class EndTag {
             return new EndTag();
         }
         else {
-            throw new SWFErrors_1.InvalidSWFError();
+            throw new InvalidSWFError_1.default();
         }
     }
 }
-exports.EndTag = EndTag;
+exports.default = EndTag;
 //# sourceMappingURL=EndTag.js.map

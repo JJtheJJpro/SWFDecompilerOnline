@@ -1,13 +1,14 @@
-import { EndTag } from "./Tags/EndTag";
-import { FileAttributesTag } from "./Tags/FileAttributesTag";
-import { InvalidSWFError } from "./SWFErrors";
-import { Rect } from "./Records/Rect";
-import { ShowFrameTag } from "./Tags/ShowFrameTag";
-import { SWFBitReader } from "./SWFBitReader";
-import { SWFTags } from "./Tags/SWFTags";
-import { Tag } from "./Tags/Tag";
+import DefineShapeTag from "./Tags/DefineShapeTag";
+import EndTag from "./Tags/EndTag";
+import FileAttributesTag from "./Tags/FileAttributesTag";
+import InvalidSWFError from "./InvalidSWFError";
+import ITag from "./Tags/ITag";
+import Rect from "./Records/Rect";
+import ShowFrameTag from "./Tags/ShowFrameTag";
+import SWFBitReader from "./SWFBitReader";
+import SWFTags from "./Tags/SWFTags";
 
-export class SWF {
+export default class SWF {
     public readonly MaxSWFVersion = 43
 
     private br: SWFBitReader
@@ -19,7 +20,7 @@ export class SWF {
     private rect = new Rect()
     private fps = 0
     private frames = 0
-    private tags: Tag[] = []
+    private tags: ITag[] = []
 
     public get Signature(): string {
         return this.signature
@@ -40,7 +41,7 @@ export class SWF {
         return this.frames
     }
 
-    public get Tags(): Tag[] {
+    public get Tags(): ITag[] {
         return this.tags
     }
 
@@ -87,7 +88,8 @@ export class SWF {
                     this.tags.push(ShowFrameTag.ReadData(this.br))
                     break
                 case SWFTags.DefineShape:
-                    throw new Error("DefineShape not Implemented")
+                    this.tags.push(DefineShapeTag.ReadData(this.br))
+                    break
                 case SWFTags.FreeCharacter:
                     throw new Error("FreeCharacter not Implemented")
                 case SWFTags.PlaceObject:

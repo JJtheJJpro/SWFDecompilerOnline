@@ -1,9 +1,9 @@
-import { InvalidSWFError } from "../SWFErrors";
-import { SWFBitReader } from "../SWFBitReader";
-import { SWFTags } from "./SWFTags";
-import { Tag } from "./Tag";
+import InvalidSWFError from "../InvalidSWFError";
+import ITag from "./ITag";
+import SWFBitReader from "../SWFBitReader";
+import SWFTags from "./SWFTags";
 
-export class EndTag implements Tag {
+export default class EndTag implements ITag {
     private constructor() {}
 
     get TagCode(): SWFTags {

@@ -16,6 +16,9 @@ export enum SWFTags {
     DefineFontInfo,
     DefineSound,
     StartSound,
+    /**
+     * @deprecated StopSoundTag has no structure, and StartSound offers the functionality of stopping sound.  Use SWFTags.StartSound instead.
+     */
     StopSound,
     DefineButtonSound,
     SoundStreamHead,
@@ -79,3 +82,5 @@ export enum SWFTags {
     DefineFontName,
     DefineBitsJPEG4 = 90
 }
+
+export default SWFTags

@@ -1,7 +1,9 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FileAttributesTag = void 0;
-const SWFTags_1 = require("./SWFTags");
+const SWFTags_1 = __importDefault(require("./SWFTags"));
 class FileAttributesTag {
     _data;
     constructor(data, useDirectBlit, useGPU, hasMetaData, actionScript3, useNetwork) {
@@ -13,7 +15,7 @@ class FileAttributesTag {
         this.UseNetwork = useNetwork;
     }
     get TagCode() {
-        return SWFTags_1.SWFTags.FileAttributes;
+        return SWFTags_1.default.FileAttributes;
     }
     get Size() {
         return 4;
@@ -40,5 +42,5 @@ class FileAttributesTag {
         return new FileAttributesTag(Buffer.from(data), retUseDirectBlit, retUseGPU, retHasMetaData, retActionScript3, retUseNetwork);
     }
 }
-exports.FileAttributesTag = FileAttributesTag;
+exports.default = FileAttributesTag;
 //# sourceMappingURL=FileAttributesTag.js.map

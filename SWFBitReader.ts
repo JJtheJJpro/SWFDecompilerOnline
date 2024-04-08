@@ -1,7 +1,7 @@
-import { InvalidSWFError } from "./SWFErrors";
-import { SWFTags } from "./Tags/SWFTags";
+import InvalidSWFError from "./InvalidSWFError";
+import SWFTags from "./Tags/SWFTags";
 
-export class SWFBitReader {
+export default class SWFBitReader {
     private boolBuf: boolean[]
     public Position: number = 0
     public swffileversion = 0
@@ -34,6 +34,14 @@ export class SWFBitReader {
     }
 
     public CheckReservedBlock(bitCount: number) {
+        let r = this.ReadBits(bitCount)
+        r.forEach(bit => {
+            if (bit) {
+                throw new InvalidSWFError("Reserved block as values set")
+            }
+        });
+    }
+    public CheckZeroBlock(bitCount: number) {
         let r = this.ReadBits(bitCount)
         r.forEach(bit => {
             if (bit) {
@@ -222,6 +230,10 @@ export class SWFBitReader {
             }
             return ret
         }
+    }
+
+    public ReadNBitSignedFloatValue(nbits: number): number {
+        return this.ReadNBitSignedValue(nbits) / (1 << 16)
     }
 
     public Read8BitString(): string {
