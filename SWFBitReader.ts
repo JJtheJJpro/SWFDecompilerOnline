@@ -163,6 +163,13 @@ export default class SWFBitReader {
         }
     }
 
+    public ReadFloatingPoint32(): number {
+        const divisor = 65536
+        let fraction = this.ReadUInt16()
+        let mantissa = this.ReadUInt16() << 16
+        return (mantissa + fraction) / divisor
+    }
+
     public ReadEncodedUInt32(): number {
         let ret = this.ReadByte()
         if ((ret & 0x00000080) == 0) {
@@ -210,6 +217,13 @@ export default class SWFBitReader {
         }
     }
 
+    public ReadFloatingPoint64(): number {
+        const divisor = 4294967296
+        let fraction = this.ReadUInt32()
+        let mantissa = this.ReadUInt32() << 32
+        return (mantissa + fraction) / divisor
+    }
+
     public ReadNBitUnsignedValue(nbits: number): number {
         let ret = 0
         for (let i = nbits - 1; i >= 0; i--) {
@@ -238,14 +252,19 @@ export default class SWFBitReader {
 
     public Read8BitString(): string {
         let ret = ""
-        while (true) {
-            let b = this.ReadByte()
-            if (b == 0) {
-                break
-            }
+        let b: number
+        while (b = this.ReadByte()) {
             ret += String.fromCharCode(b)
         }
         return ret
+    }
+    public Read8BitStringSizeOutcome(): { val: string, size: number } {
+        let ret = ""
+        let b: number
+        while (b = this.ReadByte()) {
+            ret += String.fromCharCode(b)
+        }
+        return { val: ret, size: ret.length + 1 }
     }
 
     public Read8BitCharArray(count: number): string {

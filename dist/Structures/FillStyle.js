@@ -8,8 +8,8 @@ const FocalGradient_1 = __importDefault(require("./FocalGradient"));
 const Gradient_1 = __importDefault(require("./Gradient"));
 const InvalidSWFError_1 = __importDefault(require("../InvalidSWFError"));
 const Matrix_1 = __importDefault(require("../Records/Matrix"));
-const RGB_1 = __importDefault(require("./RGB"));
-const RGBA_1 = __importDefault(require("./RGBA"));
+const RGB_1 = __importDefault(require("../Records/RGB"));
+const RGBA_1 = __importDefault(require("../Records/RGBA"));
 const SWFTags_1 = __importDefault(require("../Tags/SWFTags"));
 class FillStyle {
     constructor(fillStyleType) {

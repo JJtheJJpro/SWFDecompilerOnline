@@ -1,12 +1,12 @@
 import FillStyleTypes from "./FillStyleTypes";
 import FocalGradient from "./FocalGradient";
 import Gradient from "./Gradient";
-import IColor from "./IColor";
+import IColor from "../Records/IColor";
 import IGradient from "./IGradient";
 import InvalidSWFError from "../InvalidSWFError";
 import Matrix from "../Records/Matrix";
-import RGB from "./RGB";
-import RGBA from "./RGBA";
+import RGB from "../Records/RGB";
+import RGBA from "../Records/RGBA";
 import SWFBitReader from "../SWFBitReader";
 import SWFTags from "../Tags/SWFTags";
 

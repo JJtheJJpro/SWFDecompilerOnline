@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const FillStyle_1 = __importDefault(require("./FillStyle"));
 const JoinStyles_1 = __importDefault(require("./JoinStyles"));
-const RGBA_1 = __importDefault(require("./RGBA"));
+const RGBA_1 = __importDefault(require("../Records/RGBA"));
 class LineStyle2 {
     constructor(width, startCapStyle, joinStyle, hasFill, noHScale, noVScale, pixelHinting, noClose, endCapStyle) {
         this.Width = width;

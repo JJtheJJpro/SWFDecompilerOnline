@@ -1,8 +1,8 @@
-import IColor from "./IColor";
+import IColor from "../Records/IColor";
 import ILineStyle from "./ILineStyle";
 import InvalidSWFError from "../InvalidSWFError";
-import RGB from "./RGB";
-import RGBA from "./RGBA";
+import RGB from "../Records/RGB";
+import RGBA from "../Records/RGBA";
 import SWFBitReader from "../SWFBitReader";
 import SWFTags from "../Tags/SWFTags";
 

@@ -1,7 +1,7 @@
-import Color from "../Structures/IColor";
+import Color from "./IColor";
 import InvalidSWFError from "../InvalidSWFError";
-import RGB from "../Structures/RGB";
-import RGBA from "../Structures/RGBA";
+import RGB from "./RGB";
+import RGBA from "./RGBA";
 import SWFBitReader from "../SWFBitReader";
 import SWFTags from "../Tags/SWFTags";
 

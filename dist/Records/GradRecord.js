@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const InvalidSWFError_1 = __importDefault(require("../InvalidSWFError"));
-const RGB_1 = __importDefault(require("../Structures/RGB"));
-const RGBA_1 = __importDefault(require("../Structures/RGBA"));
+const RGB_1 = __importDefault(require("./RGB"));
+const RGBA_1 = __importDefault(require("./RGBA"));
 const SWFTags_1 = __importDefault(require("../Tags/SWFTags"));
 class GradRecord {
     constructor(ratio, color) {

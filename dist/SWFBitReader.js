@@ -157,6 +157,12 @@ class SWFBitReader {
             return uns & 0b01111111_11111111_11111111_11111111;
         }
     }
+    ReadFloatingPoint32() {
+        const divisor = 65536;
+        let fraction = this.ReadUInt16();
+        let mantissa = this.ReadUInt16() << 16;
+        return (mantissa + fraction) / divisor;
+    }
     ReadEncodedUInt32() {
         let ret = this.ReadByte();
         if ((ret & 0x00000080) == 0) {
@@ -202,6 +208,12 @@ class SWFBitReader {
             return uns & 0b01111111_11111111_11111111_11111111_11111111_11111111_11111111_11111111;
         }
     }
+    ReadFloatingPoint64() {
+        const divisor = 4294967296;
+        let fraction = this.ReadUInt32();
+        let mantissa = this.ReadUInt32() << 32;
+        return (mantissa + fraction) / divisor;
+    }
     ReadNBitUnsignedValue(nbits) {
         let ret = 0;
         for (let i = nbits - 1; i >= 0; i--) {
@@ -229,14 +241,19 @@ class SWFBitReader {
     }
     Read8BitString() {
         let ret = "";
-        while (true) {
-            let b = this.ReadByte();
-            if (b == 0) {
-                break;
-            }
+        let b;
+        while (b = this.ReadByte()) {
             ret += String.fromCharCode(b);
         }
         return ret;
+    }
+    Read8BitStringSizeOutcome() {
+        let ret = "";
+        let b;
+        while (b = this.ReadByte()) {
+            ret += String.fromCharCode(b);
+        }
+        return { val: ret, size: ret.length + 1 };
     }
     Read8BitCharArray(count) {
         let ret = "";

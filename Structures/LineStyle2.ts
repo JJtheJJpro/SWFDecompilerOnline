@@ -2,7 +2,7 @@ import CapStyles from "./CapStyles";
 import FillStyle from "./FillStyle";
 import ILineStyle from "./ILineStyle";
 import JoinStyles from "./JoinStyles";
-import RGBA from "./RGBA";
+import RGBA from "../Records/RGBA";
 import SWFBitReader from "../SWFBitReader";
 
 export default class LineStyle2 implements ILineStyle {
