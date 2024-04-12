@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SWFHelper = void 0;
 const promises_1 = __importDefault(require("fs/promises"));
 const SWF_1 = __importDefault(require("./SWF"));
 //import { Readable } from "stream";
@@ -808,5 +807,5 @@ class SWFHelper {
         return new SWF_1.default(await this.DecompressSWF(file));
     }
 }
-exports.SWFHelper = SWFHelper;
+exports.default = SWFHelper;
 //# sourceMappingURL=SWFHelper.js.map

@@ -3,7 +3,7 @@ import SWF from "./SWF";
 //import { Readable } from "stream";
 //import Zlib from "zlib";
 
-export class SWFHelper {
+export default class SWFHelper {
     static async FileExists(filePath: string) {
         try {
             await fsp.stat(filePath)

@@ -1,12 +1,32 @@
+import DefineBitsJPEG2Tag from "./Tags/DefineBitsJPEG2Tag";
+import DefineBitsTag from "./Tags/DefineBitsTag";
+import DefineFontInfo2Tag from "./Tags/DefineFontInfo2Tag";
+import DefineFontInfoTag from "./Tags/DefineFontInfoTag";
+import DefineFontTag from "./Tags/DefineFontTag";
+import DefineSceneAndFrameLabelDataTag from "./Tags/DefineSceneAndFrameLabelDataTag";
+import DefineShape2Tag from "./Tags/DefineShape2Tag";
+import DefineShape3Tag from "./Tags/DefineShape3Tag";
+import DefineShape4Tag from "./Tags/DefineShape4Tag";
 import DefineShapeTag from "./Tags/DefineShapeTag";
+import DefineSpriteTag from "./Tags/DefineSpriteTag";
+import DefineTextTag from "./Tags/DefineTextTag";
+import DoActionTag from "./Tags/DoActionTag";
 import EndTag from "./Tags/EndTag";
 import FileAttributesTag from "./Tags/FileAttributesTag";
+import FrameLabelTag from "./Tags/FrameLabelTag";
 import InvalidSWFError from "./InvalidSWFError";
 import ITag from "./Tags/ITag";
+import JPEGTablesTag from "./Tags/JPEGTablesTag";
+import PlaceObject2Tag from "./Tags/PlaceObject2Tag";
+import PlaceObjectTag from "./Tags/PlaceObjectTag";
 import Rect from "./Records/Rect";
+import RemoveObject2Tag from "./Tags/RemoveObject2Tag";
+import RemoveObjectTag from "./Tags/RemoveObjectTag";
+import SetBackgroundColorTag from "./Tags/SetBackgroundColorTag";
 import ShowFrameTag from "./Tags/ShowFrameTag";
 import SWFBitReader from "./SWFBitReader";
 import SWFTags from "./Tags/SWFTags";
+import { waitForDebugger } from "inspector";
 
 export default class SWF {
     public readonly MaxSWFVersion = 43
@@ -69,6 +89,10 @@ export default class SWF {
 
         this.br.swffileversion = this.ver
 
+        //#region Plausible values
+        let nGlyphs = 0
+        //#endregion
+
         while (this.br.Available()) {
             this.br.AlignToNextByte()
 
@@ -76,6 +100,9 @@ export default class SWF {
             tagCode = this.br.currenttag = toParse >> 6
             if (tagCode == SWFTags.ShowFrame) {
                 this.br.tempframecount++
+            }
+            if (this.tags.length == 523) {
+                console.log(1)
             }
             
             switch (tagCode) {
@@ -93,31 +120,41 @@ export default class SWF {
                 case SWFTags.FreeCharacter:
                     throw new Error("FreeCharacter not Implemented")
                 case SWFTags.PlaceObject:
-                    throw new Error("PlaceObject not Implemented")
+                    this.tags.push(PlaceObjectTag.ReadData(this.br))
+                    break
                 case SWFTags.RemoveObject:
-                    throw new Error("RemoveObject not Implemented")
+                    this.tags.push(RemoveObjectTag.ReadData(this.br))
+                    break
                 case SWFTags.DefineBits:
-                    throw new Error("DefineBits not Implemented")
+                    this.tags.push(DefineBitsTag.ReadData(this.br))
+                    break
                 case SWFTags.DefineButton:
                     throw new Error("DefineButton not Implemented")
                 case SWFTags.JPEGTables:
-                    throw new Error("JPEGTables not Implemented")
+                    this.tags.push(JPEGTablesTag.ReadData(this.br))
+                    break
                 case SWFTags.SetBackgroundColor:
-                    throw new Error("SetBackgroundColor not Implemented")
+                    this.tags.push(SetBackgroundColorTag.ReadData(this.br))
+                    break
                 case SWFTags.DefineFont:
-                    throw new Error("DefineFont not Implemented")
+                    let verytemp = DefineFontTag.ReadData(this.br)
+                    this.tags.push(verytemp.ret)
+                    nGlyphs = verytemp.nGlyphs
+                    break
                 case SWFTags.DefineText:
-                    throw new Error("DefineText not Implemented")
+                    this.tags.push(DefineTextTag.ReadData(this.br))
+                    break
                 case SWFTags.DoAction:
-                    throw new Error("DoAction not Implemented")
+                    this.tags.push(DoActionTag.ReadData(this.br))
+                    break
                 case SWFTags.DefineFontInfo:
-                    throw new Error("DefineFontInfo not Implemented")
+                    this.tags.push(DefineFontInfoTag.ReadData(this.br, nGlyphs))
                 case SWFTags.DefineSound:
                     throw new Error("DefineSound not Implemented")
                 case SWFTags.StartSound:
                     throw new Error("StartSound not Implemented")
                 case SWFTags.StopSound:
-                    throw new Error("StopSound not Implemented")
+                    throw new Error("StopSoundTag has no structure, and StartSound offers the functionality of stopping sound. Use SWFTags.StartSound instead.")
                 case SWFTags.DefineButtonSound:
                     throw new Error("DefineButtonSound not Implemented")
                 case SWFTags.SoundStreamHead:
@@ -127,9 +164,11 @@ export default class SWF {
                 case SWFTags.DefineBitsLossless:
                     throw new Error("DefineBitsLossless not Implemented")
                 case SWFTags.DefineBitsJPEG2:
-                    throw new Error("DefineBitsJPEG2 not Implemented")
+                    this.tags.push(DefineBitsJPEG2Tag.ReadData(this.br))
+                    break
                 case SWFTags.DefineShape2:
-                    throw new Error("DefineShape2 not Implemented")
+                    this.tags.push(DefineShape2Tag.ReadData(this.br))
+                    break
                 case SWFTags.DefineButtonCxform:
                     throw new Error("DefineButtonCxform not Implemented")
                 case SWFTags.Protect:
@@ -137,15 +176,18 @@ export default class SWF {
                 case SWFTags.PathsArePostscript:
                     throw new Error("PathsArePostscript not Implemented")
                 case SWFTags.PlaceObject2:
-                    throw new Error("PlaceObject2 not Implemented")
+                    this.tags.push(PlaceObject2Tag.ReadData(this.br))
+                    break
                 case SWFTags.RemoveObject2:
-                    throw new Error("RemoveObject2 not Implemented")
+                    this.tags.push(RemoveObject2Tag.ReadData(this.br))
+                    break
                 case SWFTags.SyncFrame:
                     throw new Error("SyncFrame not Implemented")
                 case SWFTags.FreeAll:
                     throw new Error("FreeAll not Implemented")
                 case SWFTags.DefineShape3:
-                    throw new Error("DefineShape3 not Implemented")
+                    this.tags.push(DefineShape3Tag.ReadData(this.br))
+                    break
                 case SWFTags.DefineText2:
                     throw new Error("DefineText2 not Implemented")
                 case SWFTags.DefineButton2:
@@ -159,7 +201,8 @@ export default class SWF {
                 case SWFTags.DefineVideo:
                     throw new Error("DefineVideo not Implemented")
                 case SWFTags.DefineSprite:
-                    throw new Error("DefineSprite not Implemented")
+                    this.tags.push(DefineSpriteTag.ReadData(this.br))
+                    break
                 case SWFTags.NameCharacter:
                     throw new Error("NameCharacter not Implemented")
                 case SWFTags.ProductInfo:
@@ -167,7 +210,8 @@ export default class SWF {
                 case SWFTags.DefineTextFormat:
                     throw new Error("DefineTextFormat not Implemented")
                 case SWFTags.FrameLabel:
-                    throw new Error("FrameLabel not Implemented")
+                    this.tags.push(FrameLabelTag.ReadData(this.br))
+                    break
                 case SWFTags.SoundStreamHead2:
                     throw new Error("SoundStreamHead2 not Implemented")
                 case SWFTags.DefineMorphShape:
@@ -197,7 +241,8 @@ export default class SWF {
                 case SWFTags.VideoFrame:
                     throw new Error("VideoFrame not Implemented")
                 case SWFTags.DefineFontInfo2:
-                    throw new Error("DefineFontInfo2 not Implemented")
+                    this.tags.push(DefineFontInfo2Tag.ReadData(this.br, nGlyphs))
+                    break
                 case SWFTags.DebugID:
                     throw new Error("DebugID not Implemented")
                 case SWFTags.EnableDebugger2:
@@ -229,11 +274,13 @@ export default class SWF {
                 case SWFTags.DoABC:
                     throw new Error("DoABC not Implemented")
                 case SWFTags.DefineShape4:
-                    throw new Error("DefineShape4 not Implemented")
+                    this.tags.push(DefineShape4Tag.ReadData(this.br))
+                    break
                 case SWFTags.DefineMorphShape2:
                     throw new Error("DefineMorphShape2 not Implemented")
                 case SWFTags.DefineSceneAndFrameLabelData:
-                    throw new Error("DefineSceneAndFrameLabelData not Implemented")
+                    this.tags.push(DefineSceneAndFrameLabelDataTag.ReadData(this.br))
+                    break
                 case SWFTags.DefineBinaryData:
                     throw new Error("DefineBinaryData not Implemented")
                 case SWFTags.DefineFontName:
@@ -244,5 +291,7 @@ export default class SWF {
                     throw new InvalidSWFError("Unknown or unacceptable tag")
             }
         }
+
+        this.br.tempframecount = -1
     }
 }

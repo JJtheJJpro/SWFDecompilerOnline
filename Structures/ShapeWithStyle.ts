@@ -22,10 +22,10 @@ export default class ShapeWithStyle {
         let retNumFillBits = br.ReadNBitUnsignedValue(4)
         let retNumLineBits = br.ReadNBitUnsignedValue(4)
         let retShapeRecords: IShapeRecord[] = []
-        //let read = ShapeRecord.ParseWithStyle(br, retFillStyles, retLineStyles, retNumFillBits, retNumLineBits, true)
-        //retShapeRecords.push(read)
+        let read = ShapeRecord.ParseWithStyle(br, retFillStyles, retLineStyles, retNumFillBits, retNumLineBits, true)
+        retShapeRecords.push(read)
         while (true) {
-            let read = ShapeRecord.ParseWithStyle(br, retFillStyles, retLineStyles, retNumFillBits, retNumLineBits, true)
+            let read = ShapeRecord.ParseWithStyle(br, retFillStyles, retLineStyles, retNumFillBits, retNumLineBits)
             retShapeRecords.push(read)
             if (read instanceof EndShapeRecord) {
                 break
