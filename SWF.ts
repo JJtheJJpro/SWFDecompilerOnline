@@ -102,9 +102,6 @@ export default class SWF {
                 this.br.tempframecount++
             }
             console.log("reading %d (tag number %d)...", tagCode, this.Tags.length)
-            if (this.Tags.length == 2717) {
-                console.log(1)
-            }
             
             switch (tagCode) {
                 case SWFTags.Unknown:
