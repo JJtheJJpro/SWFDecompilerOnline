@@ -30,7 +30,7 @@ class StyleChangeRecord {
     LineStyle;
     FillStyles;
     LineStyles;
-    static ReadDataForShapeWithStyle(br, refFillStyles, refLineStyles, refNumFillBits, refNumLineBits, first = false) {
+    static ReadDataForShapeWithStyle(br, refFillStyles, refLineStyles, numBits, first = false) {
         if (br.ReadBit()) {
             throw new InvalidSWFError_1.default();
         }
@@ -46,13 +46,13 @@ class StyleChangeRecord {
             ret.MoveDeltaY = br.ReadNBitSignedValue(ret.MoveBits);
         }
         if (retFillStyle0) {
-            ret.FillStyle0 = br.ReadNBitUnsignedValue(refNumFillBits);
+            ret.FillStyle0 = br.ReadNBitUnsignedValue(numBits.fill);
         }
         if (retFillStyle1) {
-            ret.FillStyle1 = br.ReadNBitUnsignedValue(refNumFillBits);
+            ret.FillStyle1 = br.ReadNBitUnsignedValue(numBits.fill);
         }
         if (retLineStyle) {
-            ret.LineStyle = br.ReadNBitUnsignedValue(refNumLineBits);
+            ret.LineStyle = br.ReadNBitUnsignedValue(numBits.line);
         }
         if (retNewStyles) {
             let retFillStyles = FillStyleArray_1.default.ReadData(br);
@@ -61,8 +61,8 @@ class StyleChangeRecord {
             let retLineStyles = LineStyleArray_1.default.ReadData(br);
             ret.LineStyles = refLineStyles;
             refLineStyles.LineStyles.push(...retLineStyles.LineStyles);
-            refNumFillBits = br.ReadNBitUnsignedValue(4);
-            refNumLineBits = br.ReadNBitUnsignedValue(4);
+            numBits.fill = br.ReadNBitUnsignedValue(4);
+            numBits.line = br.ReadNBitUnsignedValue(4);
             return ret;
         }
         if (first) {
@@ -74,7 +74,7 @@ class StyleChangeRecord {
             return ret;
         }
     }
-    static ReadDataForShape(br, refNumFillBits, refNumLineBits) {
+    static ReadDataForShape(br, numBits) {
         if (br.ReadBit()) {
             throw new InvalidSWFError_1.default();
         }
@@ -90,13 +90,13 @@ class StyleChangeRecord {
             ret.MoveDeltaY = br.ReadNBitSignedValue(ret.MoveBits);
         }
         if (retFillStyle0) {
-            ret.FillStyle0 = br.ReadNBitUnsignedValue(refNumFillBits);
+            ret.FillStyle0 = br.ReadNBitUnsignedValue(numBits.fill);
         }
         if (retFillStyle1) {
-            ret.FillStyle1 = br.ReadNBitUnsignedValue(refNumFillBits);
+            ret.FillStyle1 = br.ReadNBitUnsignedValue(numBits.fill);
         }
         if (retLineStyle) {
-            ret.LineStyle = br.ReadNBitUnsignedValue(refNumLineBits);
+            ret.LineStyle = br.ReadNBitUnsignedValue(numBits.line);
         }
         /*
         if (retNewStyles) {

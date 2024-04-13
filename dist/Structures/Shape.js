@@ -13,11 +13,12 @@ class Shape {
     static ReadData(br) {
         let retNumFillBits = br.ReadNBitUnsignedValue(4);
         let retNumLineBits = br.ReadNBitUnsignedValue(4);
+        let refNumBits = { fill: retNumFillBits, line: retNumLineBits };
         let retShapeRecords = [];
-        let read = ShapeRecord_1.default.Parse(br, retNumFillBits, retNumLineBits);
-        retShapeRecords.push(read);
+        //let read = ShapeRecord.Parse(br, refNumBits)
+        //retShapeRecords.push(read)
         while (true) {
-            read = ShapeRecord_1.default.Parse(br, retNumFillBits, retNumLineBits);
+            let read = ShapeRecord_1.default.Parse(br, refNumBits);
             retShapeRecords.push(read);
             if (read instanceof EndShapeRecord_1.default) {
                 break;

@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const promises_1 = __importDefault(require("fs/promises"));
 const SWFTags_1 = __importDefault(require("./SWFTags"));
 class DefineBitsJPEG2Tag {
     _data;
@@ -34,14 +35,16 @@ class DefineBitsJPEG2Tag {
         let retCharacterID = br.ReadUInt16();
         return new DefineBitsJPEG2Tag(Buffer.from(data), size, retCharacterID, Buffer.from(br.ReadBytes(size - 2)));
     }
-    Save() {
+    async SaveImageToFile(file) {
         if (this.ImageData[0] != 0xFF || this.ImageData[1] != 0xD8) {
             let imageData = Buffer.alloc(this.ImageData.length - 4);
             this.ImageData.copy(imageData, 0, 4, imageData.length);
-            return new Blob([imageData], { type: 'image/jpeg' });
+            let asdf = new Blob([imageData], { type: 'image/jpeg' });
+            promises_1.default.writeFile(file, Buffer.from(await asdf.arrayBuffer()));
         }
         else {
-            return new Blob([this.ImageData], { type: 'image/jpeg' });
+            let asdf = new Blob([this.ImageData], { type: 'image/jpeg' });
+            promises_1.default.writeFile(file, Buffer.from(await asdf.arrayBuffer()));
         }
     }
 }

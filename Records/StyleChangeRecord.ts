@@ -35,7 +35,7 @@ export default class StyleChangeRecord implements IShapeRecord {
     public FillStyles?: FillStyleArray
     public LineStyles?: LineStyleArray
 
-    public static ReadDataForShapeWithStyle(br: SWFBitReader, refFillStyles: FillStyleArray, refLineStyles: LineStyleArray, refNumFillBits: number, refNumLineBits: number, first = false): StyleChangeRecord {
+    public static ReadDataForShapeWithStyle(br: SWFBitReader, refFillStyles: FillStyleArray, refLineStyles: LineStyleArray, numBits: { fill: number, line: number }, first = false): StyleChangeRecord {
         if (br.ReadBit()) {
             throw new InvalidSWFError()
         }
@@ -54,13 +54,13 @@ export default class StyleChangeRecord implements IShapeRecord {
             ret.MoveDeltaY = br.ReadNBitSignedValue(ret.MoveBits)
         }
         if (retFillStyle0) {
-            ret.FillStyle0 = br.ReadNBitUnsignedValue(refNumFillBits)
+            ret.FillStyle0 = br.ReadNBitUnsignedValue(numBits.fill)
         }
         if (retFillStyle1) {
-            ret.FillStyle1 = br.ReadNBitUnsignedValue(refNumFillBits)
+            ret.FillStyle1 = br.ReadNBitUnsignedValue(numBits.fill)
         }
         if (retLineStyle) {
-            ret.LineStyle = br.ReadNBitUnsignedValue(refNumLineBits)
+            ret.LineStyle = br.ReadNBitUnsignedValue(numBits.line)
         }
         if (retNewStyles) {
             let retFillStyles = FillStyleArray.ReadData(br)
@@ -70,8 +70,8 @@ export default class StyleChangeRecord implements IShapeRecord {
             ret.LineStyles = refLineStyles
             refLineStyles.LineStyles.push(...retLineStyles.LineStyles)
 
-            refNumFillBits = br.ReadNBitUnsignedValue(4)
-            refNumLineBits = br.ReadNBitUnsignedValue(4)
+            numBits.fill = br.ReadNBitUnsignedValue(4)
+            numBits.line = br.ReadNBitUnsignedValue(4)
 
             return ret
         }
@@ -85,7 +85,7 @@ export default class StyleChangeRecord implements IShapeRecord {
             return ret
         }
     }
-    public static ReadDataForShape(br: SWFBitReader, refNumFillBits: number, refNumLineBits: number): StyleChangeRecord {
+    public static ReadDataForShape(br: SWFBitReader, numBits: { fill: number, line: number }): StyleChangeRecord {
         if (br.ReadBit()) {
             throw new InvalidSWFError()
         }
@@ -104,13 +104,13 @@ export default class StyleChangeRecord implements IShapeRecord {
             ret.MoveDeltaY = br.ReadNBitSignedValue(ret.MoveBits)
         }
         if (retFillStyle0) {
-            ret.FillStyle0 = br.ReadNBitUnsignedValue(refNumFillBits)
+            ret.FillStyle0 = br.ReadNBitUnsignedValue(numBits.fill)
         }
         if (retFillStyle1) {
-            ret.FillStyle1 = br.ReadNBitUnsignedValue(refNumFillBits)
+            ret.FillStyle1 = br.ReadNBitUnsignedValue(numBits.fill)
         }
         if (retLineStyle) {
-            ret.LineStyle = br.ReadNBitUnsignedValue(refNumLineBits)
+            ret.LineStyle = br.ReadNBitUnsignedValue(numBits.line)
         }
         /*
         if (retNewStyles) {

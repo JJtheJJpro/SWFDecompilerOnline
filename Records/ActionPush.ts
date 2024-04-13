@@ -16,11 +16,11 @@ export class ActionPush implements IActionRecordWithLength {
 
     public static ReadData(br: SWFBitReader): ActionPush {
         let retLen = br.ReadUInt16()
-        let copy = retLen
+        let copy = { v: retLen }
         let pushInfo: ActionPush.IPush[] = []
-        while (copy > 0) {
+        while (copy.v > 0) {
             let type: ActionPush.PushType = br.ReadByte()
-            copy--
+            copy.v--
             switch (type) {
                 case ActionPush.PushType.StringLiteral:
                     pushInfo.push(ActionPush.PushStringLiteral.ReadData(br, copy))
@@ -56,7 +56,7 @@ export class ActionPush implements IActionRecordWithLength {
                     throw new InvalidSWFError()
             }
         }
-        if (copy < 0) {
+        if (copy.v < 0) {
             throw new InvalidSWFError()
         }
         return new ActionPush(retLen, pushInfo)
@@ -88,9 +88,9 @@ export namespace ActionPush {
 
         public String: string
 
-        public static ReadData(br: SWFBitReader, length: number): PushStringLiteral {
+        public static ReadData(br: SWFBitReader, length: { v: number }): PushStringLiteral {
             let ret = br.Read8BitStringSizeOutcome()
-            length -= ret.size
+            length.v -= ret.size
             return new PushStringLiteral(ret.val)
         }
     }
@@ -103,9 +103,9 @@ export namespace ActionPush {
 
         public Float: number
 
-        public static ReadData(br: SWFBitReader, length: number): PushFloatingPointLiteral {
+        public static ReadData(br: SWFBitReader, length: { v: number }): PushFloatingPointLiteral {
             let ret = br.ReadFloatingPoint32()
-            length -= 4
+            length.v -= 4
             return new PushFloatingPointLiteral(ret)
         }
     }
@@ -118,9 +118,9 @@ export namespace ActionPush {
 
         public RegisterNumber: number
 
-        public static ReadData(br: SWFBitReader, length: number): PushRegister {
+        public static ReadData(br: SWFBitReader, length: { v: number }): PushRegister {
             let ret = br.ReadByte()
-            length -= 1
+            length.v -= 1
             return new PushRegister(ret)
         }
     }
@@ -133,9 +133,9 @@ export namespace ActionPush {
 
         public Boolean: number
 
-        public static ReadData(br: SWFBitReader, length: number): PushBoolean {
+        public static ReadData(br: SWFBitReader, length: { v: number }): PushBoolean {
             let ret = br.ReadByte()
-            length -= 1
+            length.v -= 1
             return new PushBoolean(ret)
         }
     }
@@ -148,9 +148,9 @@ export namespace ActionPush {
 
         public Double: number
 
-        public static ReadData(br: SWFBitReader, length: number): PushDouble {
+        public static ReadData(br: SWFBitReader, length: { v: number }): PushDouble {
             let ret = br.ReadFloatingPoint64()
-            length -= 8
+            length.v -= 8
             return new PushDouble(ret)
         }
     }
@@ -163,9 +163,9 @@ export namespace ActionPush {
 
         public Integer: number
 
-        public static ReadData(br: SWFBitReader, length: number): PushInteger {
+        public static ReadData(br: SWFBitReader, length: { v: number }): PushInteger {
             let ret = br.ReadUInt32()
-            length -= 4
+            length.v -= 4
             return new PushInteger(ret)
         }
     }
@@ -178,9 +178,9 @@ export namespace ActionPush {
 
         public Constant8: number
 
-        public static ReadData(br: SWFBitReader, length: number): PushConstant8 {
+        public static ReadData(br: SWFBitReader, length: { v: number }): PushConstant8 {
             let ret = br.ReadByte()
-            length -= 1
+            length.v -= 1
             return new PushConstant8(ret)
         }
     }
@@ -193,9 +193,9 @@ export namespace ActionPush {
 
         public Constant8: number
 
-        public static ReadData(br: SWFBitReader, length: number): PushConstant16 {
+        public static ReadData(br: SWFBitReader, length: { v: number }): PushConstant16 {
             let ret = br.ReadUInt16()
-            length -= 2
+            length.v -= 2
             return new PushConstant16(ret)
         }
     }

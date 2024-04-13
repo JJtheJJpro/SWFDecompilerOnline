@@ -28,7 +28,7 @@ class JPEGTablesTag {
         if (length == 0x3F) {
             length = br.ReadUInt32();
         }
-        let data = br.PeekBytes(length);
+        let data = br.ReadBytes(length);
         let jpegData = Buffer.from(data);
         let cLength = length;
         if (length > 4 && br.swffileversion < 8 && jpegData[0] == 0xFF && jpegData[1] == 0xD9 && jpegData[2] == 0xFF && jpegData[3] == 0xD8) {

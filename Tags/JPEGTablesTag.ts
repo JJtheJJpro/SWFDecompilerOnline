@@ -30,7 +30,7 @@ export default class JPEGTablesTag implements ITag {
         if (length == 0x3F) {
             length = br.ReadUInt32()
         }
-        let data = br.PeekBytes(length)
+        let data = br.ReadBytes(length)
         let jpegData = Buffer.from(data)
         let cLength = length
 

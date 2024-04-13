@@ -30,6 +30,7 @@ const SetBackgroundColorTag_1 = __importDefault(require("./Tags/SetBackgroundCol
 const ShowFrameTag_1 = __importDefault(require("./Tags/ShowFrameTag"));
 const SWFBitReader_1 = __importDefault(require("./SWFBitReader"));
 const SWFTags_1 = __importDefault(require("./Tags/SWFTags"));
+//import { waitForDebugger } from "inspector";
 class SWF {
     MaxSWFVersion = 43;
     br;
@@ -92,7 +93,8 @@ class SWF {
             if (tagCode == SWFTags_1.default.ShowFrame) {
                 this.br.tempframecount++;
             }
-            if (this.tags.length == 523) {
+            console.log("reading %d (tag number %d)...", tagCode, this.Tags.length);
+            if (this.Tags.length == 2717) {
                 console.log(1);
             }
             switch (tagCode) {

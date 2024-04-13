@@ -1,3 +1,4 @@
+import fps from "fs/promises";
 import ITag from "./ITag";
 import SWFBitReader from "../SWFBitReader";
 import SWFTags from "./SWFTags";
@@ -38,14 +39,16 @@ export default class DefineBitsJPEG2Tag implements ITag {
         return new DefineBitsJPEG2Tag(Buffer.from(data), size, retCharacterID, Buffer.from(br.ReadBytes(size - 2)))
     }
 
-    public Save() {
+    public async SaveImageToFile(file: string) {
         if (this.ImageData[0] != 0xFF || this.ImageData[1] != 0xD8) {
             let imageData = Buffer.alloc(this.ImageData.length - 4)
             this.ImageData.copy(imageData, 0, 4, imageData.length)
-            return new Blob([imageData], { type: 'image/jpeg' })
+            let asdf = new Blob([imageData], { type: 'image/jpeg' })
+            fps.writeFile(file, Buffer.from(await asdf.arrayBuffer()))
         }
         else {
-            return new Blob([this.ImageData], { type: 'image/jpeg' })
+            let asdf = new Blob([this.ImageData], { type: 'image/jpeg' })
+            fps.writeFile(file, Buffer.from(await asdf.arrayBuffer()))
         }
     }
 }

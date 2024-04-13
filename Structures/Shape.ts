@@ -13,11 +13,12 @@ export default class Shape {
     public static ReadData(br: SWFBitReader): Shape {
         let retNumFillBits = br.ReadNBitUnsignedValue(4)
         let retNumLineBits = br.ReadNBitUnsignedValue(4)
+        let refNumBits = { fill: retNumFillBits, line: retNumLineBits }
         let retShapeRecords: IShapeRecord[] = []
-        let read = ShapeRecord.Parse(br, retNumFillBits, retNumLineBits)
-        retShapeRecords.push(read)
+        //let read = ShapeRecord.Parse(br, refNumBits)
+        //retShapeRecords.push(read)
         while (true) {
-            read = ShapeRecord.Parse(br, retNumFillBits, retNumLineBits)
+            let read = ShapeRecord.Parse(br, refNumBits)
             retShapeRecords.push(read)
             if (read instanceof EndShapeRecord) {
                 break

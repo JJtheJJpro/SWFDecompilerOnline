@@ -21,11 +21,12 @@ export default class ShapeWithStyle {
         let retLineStyles = LineStyleArray.ReadData(br)
         let retNumFillBits = br.ReadNBitUnsignedValue(4)
         let retNumLineBits = br.ReadNBitUnsignedValue(4)
+        let retNumBits = { fill: retNumFillBits, line: retNumLineBits }
         let retShapeRecords: IShapeRecord[] = []
-        let read = ShapeRecord.ParseWithStyle(br, retFillStyles, retLineStyles, retNumFillBits, retNumLineBits, true)
+        let read = ShapeRecord.ParseWithStyle(br, retFillStyles, retLineStyles, retNumBits, true)
         retShapeRecords.push(read)
         while (true) {
-            let read = ShapeRecord.ParseWithStyle(br, retFillStyles, retLineStyles, retNumFillBits, retNumLineBits)
+            let read = ShapeRecord.ParseWithStyle(br, retFillStyles, retLineStyles, retNumBits)
             retShapeRecords.push(read)
             if (read instanceof EndShapeRecord) {
                 break

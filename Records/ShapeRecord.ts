@@ -8,7 +8,7 @@ import StyleChangeRecord from "./StyleChangeRecord";
 import SWFBitReader from "../SWFBitReader";
 
 export module ShapeRecord {
-    export function ParseWithStyle(br: SWFBitReader, refFillStyles: FillStyleArray, refLineStyles: LineStyleArray, refNumFillBits: number, refNumLineBits: number, first = false): IShapeRecord {
+    export function ParseWithStyle(br: SWFBitReader, refFillStyles: FillStyleArray, refLineStyles: LineStyleArray, numBits: { fill: number, line: number }, first = false): IShapeRecord {
         let toread = br.PeekBits(6)
         if (toread[0]) {
             if (toread[1]) {
@@ -20,14 +20,14 @@ export module ShapeRecord {
         }
         else {
             if (toread.some(x => x)) {
-                return StyleChangeRecord.ReadDataForShapeWithStyle(br, refFillStyles, refLineStyles, refNumFillBits, refNumLineBits, first)
+                return StyleChangeRecord.ReadDataForShapeWithStyle(br, refFillStyles, refLineStyles, numBits, first)
             }
             else {
                 return EndShapeRecord.ReadData(br)
             }
         }
     }
-    export function Parse(br: SWFBitReader, refNumFillBits: number, refNumLineBits: number): IShapeRecord {
+    export function Parse(br: SWFBitReader, numBits: { fill: number, line: number }): IShapeRecord {
         let toread = br.PeekBits(6)
         if (toread[0]) {
             if (toread[1]) {
@@ -39,7 +39,7 @@ export module ShapeRecord {
         }
         else {
             if (toread.some(x => x)) {
-                return StyleChangeRecord.ReadDataForShape(br, refNumFillBits, refNumLineBits)
+                return StyleChangeRecord.ReadDataForShape(br, numBits)
             }
             else {
                 return EndShapeRecord.ReadData(br)

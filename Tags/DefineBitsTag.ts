@@ -1,8 +1,8 @@
+import fsp from "fs/promises";
 import ITag from "./ITag";
 import JPEGTablesTag from "./JPEGTablesTag";
 import SWFBitReader from "../SWFBitReader";
 import SWFTags from "./SWFTags";
-import { waitForDebugger } from "inspector";
 
 export default class DefineBitsTag implements ITag {
     private _data: Buffer
@@ -37,7 +37,7 @@ export default class DefineBitsTag implements ITag {
         let data = br.PeekBytes(length)
         let retCharID = br.ReadUInt16()
         let jpegData = Buffer.from(br.ReadBytes(length - 2))
-        let cLength = length
+        let cLength = length - 2
 
         if (length > 4 && br.swffileversion < 8 && jpegData[0] == 0xFF && jpegData[1] == 0xD9 && jpegData[2] == 0xFF && jpegData[3] == 0xD8) {
             jpegData = Buffer.copyBytesFrom(jpegData, 4, cLength -= 4)
@@ -52,7 +52,7 @@ export default class DefineBitsTag implements ITag {
         return new DefineBitsTag(Buffer.from(data), length, retCharID, jpegData)
     }
 
-    public SaveToImage(jpegTable: JPEGTablesTag) {
+    public SaveImageToFile(jpegTable: JPEGTablesTag, file: string) {
         let length = jpegTable.JPEGData.length + this.JPEGData.length + 4
         let offset = 2
         let buf = Buffer.alloc(length)
@@ -64,8 +64,6 @@ export default class DefineBitsTag implements ITag {
         offset += this.JPEGData.length
         buf[offset++] = 0xFF
         buf[offset] = 0xD9
-        let asdf = new Blob([buf], { type: 'image/jpeg' })
-        //return await createImageBitmap(asdf)
-        return asdf
+        fsp.writeFile(file, buf)
     }
 }

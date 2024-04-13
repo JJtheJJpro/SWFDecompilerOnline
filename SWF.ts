@@ -26,7 +26,7 @@ import SetBackgroundColorTag from "./Tags/SetBackgroundColorTag";
 import ShowFrameTag from "./Tags/ShowFrameTag";
 import SWFBitReader from "./SWFBitReader";
 import SWFTags from "./Tags/SWFTags";
-import { waitForDebugger } from "inspector";
+//import { waitForDebugger } from "inspector";
 
 export default class SWF {
     public readonly MaxSWFVersion = 43
@@ -101,7 +101,8 @@ export default class SWF {
             if (tagCode == SWFTags.ShowFrame) {
                 this.br.tempframecount++
             }
-            if (this.tags.length == 523) {
+            console.log("reading %d (tag number %d)...", tagCode, this.Tags.length)
+            if (this.Tags.length == 2717) {
                 console.log(1)
             }
             

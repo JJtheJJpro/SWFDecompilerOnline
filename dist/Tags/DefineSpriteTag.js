@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const DoActionTag_1 = __importDefault(require("./DoActionTag"));
 const EndTag_1 = __importDefault(require("./EndTag"));
+const FrameLabelTag_1 = __importDefault(require("./FrameLabelTag"));
 const InvalidSWFError_1 = __importDefault(require("../InvalidSWFError"));
 const PlaceObject2Tag_1 = __importDefault(require("./PlaceObject2Tag"));
 const PlaceObjectTag_1 = __importDefault(require("./PlaceObjectTag"));
@@ -78,7 +79,8 @@ class DefineSpriteTag {
                     tag = RemoveObject2Tag_1.default.ReadData(br);
                     break;
                 case SWFTags_1.default.FrameLabel:
-                    throw new Error("FrameLabel not Implemented");
+                    tag = FrameLabelTag_1.default.ReadData(br);
+                    break;
                 case SWFTags_1.default.SoundStreamHead2:
                     throw new Error("SoundStreamHead2 not Implemented");
                 case SWFTags_1.default.DoInitAction:

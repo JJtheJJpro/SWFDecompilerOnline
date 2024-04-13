@@ -1,10 +1,11 @@
+import DefineBitsJPEG2Tag from "./Tags/DefineBitsJPEG2Tag";
 import DefineBitsTag from "./Tags/DefineBitsTag";
 import JPEGTablesTag from "./Tags/JPEGTablesTag";
-import prompt from "prompt-sync";
 import SWFHelper from "./SWFHelper";
+//import prompt from "prompt-sync";
 
 async function main() {
-    let r = "C:\\Users\\jjthe\\Desktop\\Games\\old games\\Heavy Weapon\\Images\\middle.swf"//prompt()({ask:'> '})
+    let r = "C:\\Users\\jjthe\\Desktop\\Games\\old games\\Heavy Weapon\\Images\\intro.swf"//prompt()({ask:'> '})
     if (r == null) {
         return
     }
@@ -16,7 +17,10 @@ async function main() {
             jpgTable = tag
         }
         if (tag instanceof DefineBitsTag) {
-            tag.SaveToImage(jpgTable)
+            tag.SaveImageToFile(jpgTable, 'C:\\Users\\jjthe\\Desktop\\tosaveDefineBits.jpeg')
+        }
+        if (tag instanceof DefineBitsJPEG2Tag) {
+            tag.SaveImageToFile('C:\\Users\\jjthe\\Desktop\\tosaveDefineBitsJPEG2Tag.jpeg')
         }
     });
 }

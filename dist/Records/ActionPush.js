@@ -16,11 +16,11 @@ class ActionPush {
     PushInfo;
     static ReadData(br) {
         let retLen = br.ReadUInt16();
-        let copy = retLen;
+        let copy = { v: retLen };
         let pushInfo = [];
-        while (copy > 0) {
+        while (copy.v > 0) {
             let type = br.ReadByte();
-            copy--;
+            copy.v--;
             switch (type) {
                 case ActionPush.PushType.StringLiteral:
                     pushInfo.push(ActionPush.PushStringLiteral.ReadData(br, copy));
@@ -56,7 +56,7 @@ class ActionPush {
                     throw new InvalidSWFError_1.default();
             }
         }
-        if (copy < 0) {
+        if (copy.v < 0) {
             throw new InvalidSWFError_1.default();
         }
         return new ActionPush(retLen, pushInfo);
@@ -85,7 +85,7 @@ exports.ActionPush = ActionPush;
         String;
         static ReadData(br, length) {
             let ret = br.Read8BitStringSizeOutcome();
-            length -= ret.size;
+            length.v -= ret.size;
             return new PushStringLiteral(ret.val);
         }
     }
@@ -98,7 +98,7 @@ exports.ActionPush = ActionPush;
         Float;
         static ReadData(br, length) {
             let ret = br.ReadFloatingPoint32();
-            length -= 4;
+            length.v -= 4;
             return new PushFloatingPointLiteral(ret);
         }
     }
@@ -111,7 +111,7 @@ exports.ActionPush = ActionPush;
         RegisterNumber;
         static ReadData(br, length) {
             let ret = br.ReadByte();
-            length -= 1;
+            length.v -= 1;
             return new PushRegister(ret);
         }
     }
@@ -124,7 +124,7 @@ exports.ActionPush = ActionPush;
         Boolean;
         static ReadData(br, length) {
             let ret = br.ReadByte();
-            length -= 1;
+            length.v -= 1;
             return new PushBoolean(ret);
         }
     }
@@ -137,7 +137,7 @@ exports.ActionPush = ActionPush;
         Double;
         static ReadData(br, length) {
             let ret = br.ReadFloatingPoint64();
-            length -= 8;
+            length.v -= 8;
             return new PushDouble(ret);
         }
     }
@@ -150,7 +150,7 @@ exports.ActionPush = ActionPush;
         Integer;
         static ReadData(br, length) {
             let ret = br.ReadUInt32();
-            length -= 4;
+            length.v -= 4;
             return new PushInteger(ret);
         }
     }
@@ -163,7 +163,7 @@ exports.ActionPush = ActionPush;
         Constant8;
         static ReadData(br, length) {
             let ret = br.ReadByte();
-            length -= 1;
+            length.v -= 1;
             return new PushConstant8(ret);
         }
     }
@@ -176,7 +176,7 @@ exports.ActionPush = ActionPush;
         Constant8;
         static ReadData(br, length) {
             let ret = br.ReadUInt16();
-            length -= 2;
+            length.v -= 2;
             return new PushConstant16(ret);
         }
     }

@@ -1,5 +1,6 @@
 import DoActionTag from "./DoActionTag";
 import EndTag from "./EndTag";
+import FrameLabelTag from "./FrameLabelTag";
 import InvalidSWFError from "../InvalidSWFError";
 import ITag from "./ITag";
 import PlaceObject2Tag from "./PlaceObject2Tag";
@@ -85,7 +86,8 @@ export default class DefineSpriteTag implements ITag {
                     tag = RemoveObject2Tag.ReadData(br)
                     break
                 case SWFTags.FrameLabel:
-                    throw new Error("FrameLabel not Implemented")
+                    tag = FrameLabelTag.ReadData(br)
+                    break
                 case SWFTags.SoundStreamHead2:
                     throw new Error("SoundStreamHead2 not Implemented")
                 case SWFTags.DoInitAction:
